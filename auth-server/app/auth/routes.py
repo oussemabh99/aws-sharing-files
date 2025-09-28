@@ -40,7 +40,7 @@ def mainscript():
              else :
               return jsonify({"error":"not valid token"}), 401  
         else :
-           return  jsonify({"error":"no token specified"}), 200
+           return  jsonify({"error":"no token specified"}), 401
 @auth_bp.route('/orgs', methods=['POST'])
 def manage_org():
     try :
@@ -55,10 +55,52 @@ def manage_org():
         except Exception as e :
          return  jsonify({"error":"error"}), 401  
         try:
-            rest=db.create_org(filename)
+            if (filename != None):
+               rest=db.create_org(filename)
+            else : 
+               return  jsonify({"error":"no org specified"}), 400
         except Exception as e :
          return  jsonify({"error":"error"}), 403
         if(rest) :
            return jsonify({"error":f"organisation {filename} created"}), 200
         else :
            return jsonify({"error":f"organisation {filename} not created"}), 403
+@auth_bp.route('/users', methods=['POST','DELETE'])
+def manage_users():
+   if request.method == 'POST':
+     try :
+         data = request.headers.get("authorization").split(" ")[1]
+     except Exception as e :
+         return  jsonify({"error":e}), 401 
+     payload = api.get_prefix (data)
+     if (payload):
+      try : 
+       data2 = request.json
+       name = data2.get("name")
+       password = data2.get("password")
+       email = data2.get("email")
+       org = db.get_org_ui(data2.get("org"))
+       creation_status = db.create_user(name, password, email, org)
+      except Exception as e :
+         return  jsonify({"error":e}), 401
+      if (creation_status):
+         return jsonify({"test": f"user {name} created "}), 200
+      else :
+         return jsonify({"error":"error"}), 400
+   if request.method == 'DELETE':
+      try :
+         data = request.headers.get("authorization").split(" ")[1]
+      except Exception as e :
+         return  jsonify({"error":e}), 401 
+      payload = api.get_prefix (data)
+      if (payload):
+       try : 
+        data2 = request.json
+        name = data2.get("name")
+        deletion_status = db.delete_user(name)
+       except Exception as e :
+         return  jsonify({"error":e}), 401
+       if (deletion_status):
+         return jsonify({"test": f"user {name} deleted "}), 200
+       else :
+         return jsonify({"error":"error"}), 400

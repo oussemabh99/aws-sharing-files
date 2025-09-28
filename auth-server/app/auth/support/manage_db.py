@@ -2,8 +2,8 @@ import psycopg2
 import hashlib
 import uuid
 import datetime
-db_ip =  "192.1.1.119"
-db_port =  50001
+db_ip =  "192.168.100.239"
+db_port =  5432
 db_name = "postgres"
 db_password = "postgres"
 db_user = "postgres"
@@ -189,13 +189,15 @@ def create_user(name, password, email, org):
     conn = connect_db(db_name, db_name, db_ip, db_password, db_port)
     if not conn:
         print("Error: Connection to database failed.")
-        return None
+        return False
 
     if (check_user_existance(name)== False):
         print(f"User {name} already exists.")
         
-        return None
-
+        return False
+    if (password == ''):
+       print("password is null")
+       return False
     try:
         cursor = conn.cursor()
         uuid_generated = str(uuid.uuid4())
@@ -235,7 +237,7 @@ def create_user(name, password, email, org):
         print(f"Error inserting user: {e}")
         cursor.close()
         conn.close()
-        return None
+        return False
 #check_user_existance("admin")
 #create_user("admin", "admin", "admin.admin@gamil.com", "a6621849-9434-46a6-8fbb-498a56ef40d8")
 def delete_user(name):
