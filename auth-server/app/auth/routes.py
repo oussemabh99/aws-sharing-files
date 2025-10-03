@@ -31,7 +31,6 @@ def mainscript():
         else :
             return jsonify({"Error: Unothorized":""}), 403
     if request.method == 'GET':
-        print(request.headers.get("Authorization"))
         data = request.headers.get("authorization").split(" ")[1]
         if data :
              payload = tokenMgt.decode_jwt(data) 

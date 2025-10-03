@@ -2,8 +2,8 @@ import psycopg2
 import hashlib
 import uuid
 import datetime
-db_ip =  "192.168.100.239"
-db_port =  5432
+db_ip =  "192.1.1.119"
+db_port =  50001
 db_name = "postgres"
 db_password = "postgres"
 db_user = "postgres"
@@ -192,9 +192,11 @@ def create_user(name, password, email, org):
         return False
 
     if (check_user_existance(name)== False):
-        print(f"User {name} already exists.")
-        
+        print(f"User {name} already exists.")      
         return False
+    if (name == ''):
+       print("name is null")
+       return False
     if (password == ''):
        print("password is null")
        return False
@@ -228,7 +230,8 @@ def create_user(name, password, email, org):
          conn.commit()
          print(f"user {name} is added")
         except Exception as e:
-         print(f"Error deleating user: {e}")
+         print(f"Error Creating user: {e}")
+         return False
         cursor.close()
         conn.close()
         return True

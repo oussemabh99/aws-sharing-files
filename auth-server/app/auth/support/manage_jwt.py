@@ -54,4 +54,4 @@ def decode_jwt(encoded_jwt):
         return(decoded_jwt)
     except Exception as e :
         print (e)
-        return None
+        return False
