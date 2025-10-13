@@ -10,7 +10,10 @@ def login():
 @auth_bp.route('/token',methods=['GET', 'POST'])
 def mainscript():
     if request.method == 'POST':
-        auth = request.headers.get("authorization").split(" ")[1]
+        try :  
+         auth = request.headers.get("authorization").split(" ")[1]
+        except Exception as e :
+            return  jsonify({"error":"specify credentiels"}), 401
         if (not auth ):
            return jsonify({"Error: Username and password should not be Empty":""}), 400
         auth = base64.b64decode(auth).decode('utf-8')
@@ -31,7 +34,10 @@ def mainscript():
         else :
             return jsonify({"Error: Unothorized":""}), 403
     if request.method == 'GET':
-        data = request.headers.get("authorization").split(" ")[1]
+        try :
+          data = request.headers.get("authorization").split(" ")[1]
+        except Exception as e :
+             return  jsonify({"error":"error finding credentiel"}), 401
         if data :
              payload = tokenMgt.decode_jwt(data) 
              if (payload) :
@@ -71,7 +77,10 @@ def manage_users():
          data = request.headers.get("authorization").split(" ")[1]
      except Exception as e :
          return  jsonify({"error":e}), 401 
-     payload = api.get_prefix (data)
+     try :
+       payload = api.get_prefix (data)
+     except Exception as e :
+          return  jsonify({"error":e}), 401
      if (payload):
       try : 
        data2 = request.json
@@ -86,6 +95,8 @@ def manage_users():
          return jsonify({"test": f"user {name} created "}), 200
       else :
          return jsonify({"error":"error"}), 400
+     else :
+        return jsonify({"error":"Not authorized"}), 403
    if request.method == 'DELETE':
       try :
          data = request.headers.get("authorization").split(" ")[1]
@@ -103,3 +114,5 @@ def manage_users():
          return jsonify({"test": f"user {name} deleted "}), 200
        else :
          return jsonify({"error":"error"}), 400
+      else :
+        return jsonify({"error":"Not authorized"}), 403  

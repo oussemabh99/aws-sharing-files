@@ -2,8 +2,8 @@ import psycopg2
 import hashlib
 import uuid
 import datetime
-db_ip =  "192.1.1.119"
-db_port =  50001
+db_ip =  "192.168.1.6"
+db_port =  5432
 db_name = "postgres"
 db_password = "postgres"
 db_user = "postgres"
