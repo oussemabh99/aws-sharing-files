@@ -2,11 +2,12 @@ import psycopg2
 import hashlib
 import uuid
 import datetime
-db_ip =  "192.168.1.6"
-db_port =  5432
-db_name = "postgres"
-db_password = "postgres"
-db_user = "postgres"
+import os
+db_ip =  os.getenviron('DB_IP')
+db_port =  os.getenviron('DB_PORT')
+db_name = os.getenviron('DB_NAME')
+db_password = os.getenviron('DB_PASSWORD')
+db_user = os.getenviron('DB_USER')
 def connect_db(db,user,host,password,port):
     try:
         conn = psycopg2.connect(database = db, 
