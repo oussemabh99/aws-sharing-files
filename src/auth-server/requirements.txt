@@ -1,5 +1,0 @@
-psycopg2
-flask
-pyjwt==1.5.3
-datetime
-cryptography

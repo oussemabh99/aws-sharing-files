@@ -5,11 +5,14 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 import uuid
-with open(r"C:\Users\oussema.bh\Desktop\kube\ca.crt", "rb") as certif_file:
+import os
+crt_data = os.environ.get("PathCrt") 
+key_data = os.environ.get("PathKey")
+with open(f"{crt_data}", "rb") as certif_file:
    cert_data = certif_file.read()
    certificate = x509.load_pem_x509_certificate(cert_data, default_backend())
 public_key1 = certificate.public_key()
-with open(r"C:\Users\oussema.bh\Desktop\kube\ca.key", "rb") as key_file:
+with open(f"{key_data}", "rb") as key_file:
 
     private_key1 = serialization.load_pem_private_key(
 
