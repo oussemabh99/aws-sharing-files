@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idm
+  namespace: devops
+  labels:
+    type: idm
+spec:
+  template:
+    metadata:
+     name: idm
+     namespace: devops
+     labels:
+       type: idm
+    spec:
+      containers:
+      - image: localhost:3000/aws/auth:v1.0.0
+        name: idm
+        volumeMounts:
+        - mountPath: /opt/ssl
+          name: ssl
+        env:
+
+      volumes:
+        name: ssl
+        secret:
+          secretName: tls-secret
+
+
