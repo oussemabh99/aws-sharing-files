@@ -1,7 +1,0 @@
-psycopg2
-flask
-pyjwt
-datetime
-cryptography
-requests 
-uuid
