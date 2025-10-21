@@ -6,6 +6,10 @@ metadata:
   labels:
     type: idm
 spec:
+  replicas: 1
+  selector:
+   matchLabels:
+     type: idm 
   template:
     metadata:
      name: idm
@@ -14,16 +18,40 @@ spec:
        type: idm
     spec:
       containers:
-      - image: localhost:3000/aws/auth:v1.0.0
+      - image: localhost:3000/aws/auth:v1.0.1
         name: idm
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+           drop:
+           - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1999
+          runAsNonRoot: true
+          runAsUser: 1999
         volumeMounts:
         - mountPath: /opt/ssl
           name: ssl
         env:
-
+        - name: PathCrt
+          value: "/opt/ssl/tls.crt"
+        - name: PathKey
+          value: "/opt/ssl/tls.key"
+        - name: DB_IP
+          value: "postgrestest"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "postgres"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "postgres" 
+      imagePullSecrets:
+      - name: auth         
       volumes:
-        name: ssl
+      - name: ssl
         secret:
-          secretName: tls-secret
+         secretName: tls-secret
 
 
