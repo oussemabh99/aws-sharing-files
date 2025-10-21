@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: devops
+  name: aws-connectors
+  labels:
+    type: aws
+spec:
+  selector:
+   matchLabels: 
+    type: aws
+  replicas: 1
+  template:
+   metadata:
+    namespace: devops
+    name: aws-connectors
+    labels:
+     type: aws
+   spec:
+     containers:
+     - image: localhost:3000/aws/aws-access:v1.0.1
+       name: aws
+       securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+         drop:
+         - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 1999
+        runAsNonRoot: true
+        runAsUser: 1999
+       env: 
+       - name: AUTH_SERVICE   
+         value: "auth" 
+       envFrom:
+       - secretRef:
+          name: aws-secret
+     imagePullSecrets:
+     - name: auth
+     
+
